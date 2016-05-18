@@ -4,5 +4,8 @@ FI_tests.ipynb
 myappeg.py
 test_plot.py
 test.html
-fipy/__pycache__
-fipy/*.pyc
+fispy/__pycache__
+fispy/*.pyc
+*.egg*
+build/*
+dist/*
