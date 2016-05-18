@@ -7,9 +7,7 @@ from bokeh.charts.attributes import cat, color
 from bokeh.plotting import Figure, curdoc, vplot
 from bokeh.models import ColumnDataSource
 from bokeh.io import vform
-
-sys.path.insert(0, os.getcwd())# small hack to get fipy on path
-from fipy import C1
+from fispy.fispy import C1
 
 d = dict(
         pay=[1.5, 1.5],
