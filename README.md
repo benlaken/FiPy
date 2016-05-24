@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/benlaken/fispy.png?label=ready&title=Ready)](https://waffle.io/benlaken/fispy)
 # fispy #
 ## A Personal Financial Scenario Calculator ##
 
