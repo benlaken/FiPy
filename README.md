@@ -2,7 +2,7 @@
 # fispy #
 ## A Personal Financial Scenario Calculator ##
 
-A work in progress.
+A work in progress...
 
 To run the Bokeh App:
 
