@@ -6,7 +6,6 @@ ipykernel==4.3.1
 ipython==4.2.0
 ipython-genutils==0.1.0
 Jinja2==2.8
-JSAnimation==0.1
 jsonschema==2.5.1
 jupyter-client==4.2.2
 jupyter-core==4.1.0
