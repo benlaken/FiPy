@@ -1,5 +1,6 @@
 import unittest
-from fispy.fispy import C1
+import datetime as dt
+from fispy.fispy import C1, Asset, Portfolio
 
 d = dict(
         pay=[1.5, 1.5],
@@ -21,9 +22,21 @@ d = dict(
 
 class TestFispyMethods(unittest.TestCase):
 
-    def test_objectCreated(self):
+    def test_C1objectCreated(self):
         projection = C1(d=d)
         self.assertIsNotNone(projection)
+
+
+    def test_PortfolioMonthlyIncome(self):
+        d1 = {'kind': 'job',
+              'monthly_income': 1.5,
+              'start_date': dt.date(2016, 6, 1)}
+        d2 = {'kind': 'job',
+              'monthly_income': 1.5,
+              'start_date': dt.date(2016, 6, 1)}
+        test2 = Portfolio(Asset(**d1), Asset(**d2))
+        test2.monthlyIncome()
+        self.assertEqual(test2.monthly_income, 3.0)
 
 if __name__ == '__main___':
     unittest.main()
