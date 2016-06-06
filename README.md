@@ -1,4 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/benlaken/fispy.png?label=ready&title=Ready)](https://waffle.io/benlaken/fispy)
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/c93811158c0743bfbde1e540ae4f5d3c/badge.svg)](https://www.quantifiedcode.com/app/project/c93811158c0743bfbde1e540ae4f5d3c)
 # fispy #
 ## A Personal Financial Scenario Calculator ##
 
