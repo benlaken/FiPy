@@ -26,7 +26,6 @@ class TestFispyMethods(unittest.TestCase):
         projection = C1(d=d)
         self.assertIsNotNone(projection)
 
-
     def test_PortfolioMonthlyIncome(self):
         d1 = {'kind': 'job',
               'monthly_income': 1.5,
@@ -37,6 +36,18 @@ class TestFispyMethods(unittest.TestCase):
         test2 = Portfolio(Asset(**d1), Asset(**d2))
         test2.monthlyIncome()
         self.assertEqual(test2.monthly_income, 3.0)
+
+    def test_PayExpenses(self):
+        d1 = {'kind': 'job',
+              'monthly_income': 1.5,
+              'start_date': dt.date(2016, 6, 1),
+              'monthly_expenses': 0.5}
+        test2 = Portfolio(Asset(**d1))
+        test2.monthlyIncome()
+        test2.monthlyExpenses()
+        self.assertEqual(test2.monthly_income,
+                         d1['monthly_income']-d1['monthly_expenses'])
+
 
 if __name__ == '__main___':
     unittest.main()
