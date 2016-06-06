@@ -13,8 +13,8 @@ install:
 
 # command to run tests
 script:
-  - nosetests
-  - coverage run fispy/tests/tests_fispy.py
+  - nosetests --with-coverage
+  #- coverage run fispy/tests/tests_fispy.py
 
 after_success:
   - codecov
