@@ -1,9 +1,7 @@
 language: python
 python:
   - "3.4"
-+cache:
- +  directories:
- +    - $HOME/.cache/pip
+cache: pip
 # command to install dependencies
 install:
   - pip install --upgrade pip
