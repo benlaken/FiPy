@@ -20,6 +20,7 @@ d = dict(
         prd=50,
         )
 
+
 class TestFispyMethods(unittest.TestCase):
 
     def test_C1objectCreated(self):
@@ -48,6 +49,14 @@ class TestFispyMethods(unittest.TestCase):
         self.assertEqual(test2.monthly_income,
                          d1['monthly_income']-d1['monthly_expenses'])
 
+    def test_AddAssets(self):
+        """ Check you can add assets to a created Portfolio """
+        a1 = Asset(**{'kind': 'job',
+                      'monthly_income': 1.5,
+                      'monthly_expenses': 0.7})
+        p1 = Portfolio(a1)
+        p1.addNewAsset(a1)
+        self.assertEqual(len(p1.assets), 2)
 
 if __name__ == '__main___':
     unittest.main()

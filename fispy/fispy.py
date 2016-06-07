@@ -140,12 +140,9 @@ class C1(object):
 
 
 class Asset(object):
-
     def __init__(self, **kwargs):
-        self.valid_assets = [None, 'real estate', 'stocks', 'job', 'cash']
         self.kind = kwargs.get('kind', None)
-        assert self.kind.lower() in self.valid_assets, \
-        '{0} is not a valid asset'.format(self.kind.lower())
+        assert self.kind.lower() in [None, 'real estate', 'stocks', 'job', 'cash']
         self.monthly_income = kwargs.get('monthly_income', None)
         self.monthly_expenses = kwargs.get('monthly_expenses', None)
         self.start_date = kwargs.get('start_date', dt.datetime.now().date())
@@ -158,6 +155,10 @@ class Asset(object):
 
     def __str__(self):
         return str("Asset = {0}".format(self.kind))
+
+    def __iter__(self):
+        for key, value in sorted(a1.__dict__.items()):
+            yield key, value
 
 
 
