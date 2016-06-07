@@ -1,7 +1,9 @@
 language: python
 python:
   - "3.4"
-  - "3.5"
++cache:
+ +  directories:
+ +    - $HOME/.cache/pip
 # command to install dependencies
 install:
   - pip install --upgrade pip
@@ -10,11 +12,9 @@ install:
   - pip install codecov
   - pip install -r requirements.txt
   - python setup.py install
-
 # command to run tests
 script:
   - nosetests --with-coverage
   #- coverage run fispy/tests/tests_fispy.py
-
 after_success:
   - codecov
