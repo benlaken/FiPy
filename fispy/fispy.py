@@ -167,7 +167,8 @@ class Portfolio(object):
     with addNewAsset() function, or can initilize object with a
     list of asset objects.
 
-    Add a test that at most only one cash asset (a summary asset) is given.
+    :param Asset: n number of Asset objects
+    :returns: A Portfolio instance
     """
 
     def __init__(self, *assets):
@@ -187,11 +188,26 @@ class Portfolio(object):
 
 
     def summary(self):
-        print("--Summary--\nIncome: {0:3.2f} \nCash: {1:3.2f} \nDebt: {3:3.2f} \nInvestments: {2:3.2f}".format(
-                self.monthly_income, self.cash, self.netInvestments, self.debt))
+        """Print a summary of the Portfolio instance values of Income, Cash
+        Debt, Investments and Net worth.
+
+        :param self:
+        :returns: A series of string items
+        """
+        print("--Summary--\nIncome: {0:3.2f} \nCash: {1:3.2f}".format(
+                self.monthly_income, self.cash))
+        print("Debt: {0:3.2f}".format(self.debt))
+        print("Investments: {0:3.2f}".format(self.netInvestments))
         print("Net worth: {0:3.2f}".format(self.networth))
 
     def addNewAsset(self, new_asset):
+        """Add a new Asset() obect to an existing Portfolio instance.
+        This will be useful for modifying established portfolios once this is
+        running as a web app.
+
+        :param Asset: Instance of Asset() object
+        :returns: Updates Portfolio object
+        """
         self.assets.append(new_asset)
 
     def monthlyIncome(self):
@@ -264,6 +280,11 @@ class Portfolio(object):
 
 
     def calcNetWorth(self):
+        """Calculates Net worth by summing value of assets and subtracting debt.
+
+        :param self: Examines attributes of Portfolio object
+        :returns: self.networth in Portfolio object
+        """
         net_value = 0
         for asset in self.assets:
             # cash, property and investments all have a value property (not jobs)
