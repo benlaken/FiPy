@@ -5,18 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 
 class C1(object):
-    """ Generate financial development for a given scenario.
-
-    Parameters
-    ----------
-    d: dict
-        A dictionary object with keys required by __init__()
-
-    Returns
-    -------
-    return: gen_quads()
-        A pandas.DataFrame object with plotting values for a
-        Bokeh Quad plot.
+    """ Old method. To be erased.
     """
     def __init__(self, d):
         self.date = dt.datetime(year=2016, month=5, day=1)
@@ -205,12 +194,18 @@ class Portfolio(object):
         This will be useful for modifying established portfolios once this is
         running as a web app.
 
-        :param Asset: Instance of Asset() object
+        :param Asset(): Instance of Asset() object
         :returns: Updates Portfolio object
         """
         self.assets.append(new_asset)
 
     def monthlyIncome(self):
+        """Calculate avaiable monthly cash based on monthly_income from all
+        Asset() objects of a portfolio.
+
+        :param self.assets: Sums asset.monthly_income across asset objects
+        :returns self.monthly_income: float
+        """
         tmp_income = 0
         for asset in self.assets:
             if asset.monthly_income:
