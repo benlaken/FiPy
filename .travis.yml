@@ -9,10 +9,14 @@ install:
   - pip install --upgrade setuptools
   - pip install codecov
   - pip install -r requirements.txt
+  - pip install --user sphinx
+  - pip install --user travis-sphinx
   - python setup.py install
 # command to run tests
 script:
   - nosetests --with-coverage
+  - travis-sphinx build
   #- coverage run fispy/tests/tests_fispy.py
 after_success:
   - codecov
+  - travis-sphinx deploy
