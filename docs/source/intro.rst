@@ -13,11 +13,16 @@ date times.
 
 Types of assets currently supported (and some of their features):
 * jobs
+
   * monthly salary property
+
 * real estate
+
   * can be a property to rent
   * this type of asset can have debt and repayment properties
+
 * stocks
+
   * can be a generic asset with a simple growth factor
   * or, can be a real stock,
   * will add options for monthly-growth randomly drawn from distributions based on historical data
