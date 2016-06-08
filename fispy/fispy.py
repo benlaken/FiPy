@@ -267,6 +267,12 @@ class Portfolio(object):
                         self.monthly_income -= asset.monthly_repayment
 
     def monthlyDebt(self):
+        """Calculate debt each month. Examines the Assets held in the Portfolio
+        object, and sums the debt. Assigns this value to self.debt.
+
+        :param self: Examines Portfolio objects assets.debt floats
+        :returns self.debt: float
+        """
         tmp_debt = 0
         for asset in self.assets:
             if asset.debt:
@@ -298,6 +304,12 @@ class Portfolio(object):
         self.calcNetWorth()
 
     def quad_positions(self, left, right, bottom, top, color):
+        """Assign values to the left, right, bottom, and top position
+        labels and a color value for the Bokeh Quad glyph.
+
+        :param self, left, right, bottom, top, color:
+        :returns: Assigns values to the list items.
+        """
         # Add debt marker
         left.append(self.date)
         right.append(self.date + relativedelta(months=1))
@@ -325,6 +337,12 @@ class Portfolio(object):
         return
 
     def gen_quads(self):
+        """For the current state of Portfolio properties generate quad plot
+        dataframe object to be consumed by Bokeh plots.
+
+        :param self: Examines attributes of Portfolio object
+        :returns: a pd.DataFrame object
+        """
         left = []
         right = []
         top = []
