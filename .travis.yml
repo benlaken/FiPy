@@ -7,12 +7,12 @@ install:
   - pip install --upgrade pip
   - pip install --upgrade wheel
   - pip install --upgrade setuptools
-  - pip install codecov
+  - pip install codecov pytest pytest-cov
   - pip install -r requirements.txt
   - pip install .
 # command to run tests
 script:
-  - nosetests --with-coverage
+  - py.test --cov=fispy --cov-report xml
   - travis-sphinx build
   #- coverage run fispy/tests/tests_fispy.py
 after_success:
