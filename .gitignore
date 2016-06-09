@@ -1,6 +1,5 @@
 .ipynb_checkpoints/
 .DS_Store
-FI_tests.ipynb
 myappeg.py
 test_plot.py
 test.html
@@ -13,3 +12,5 @@ __pycache__/
 fispy/tests/__pycache__/
 .coverage
 docs/build/
+*.pyc
+.cache/
