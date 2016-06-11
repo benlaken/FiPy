@@ -27,7 +27,7 @@ class Asset(object):
         return str("Asset = {0}".format(self.kind))
 
     def __iter__(self):
-        for key, value in sorted(a1.__dict__.items()):
+        for key, value in sorted(self.__dict__.items()):
             yield key, value
 
 
