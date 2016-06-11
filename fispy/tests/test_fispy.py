@@ -6,6 +6,14 @@ from fispy.fispy import Asset, Portfolio
 class TestFispyMethods(unittest.TestCase):
     """Main class for fispy testing methods"""
 
+    def test_count_cash(self):
+        a1 = Asset(**{'kind': 'cash',
+                      'max_cash': 50.,
+                      'value': 15})
+        p1 = Portfolio(a1)
+        p1.count_cash()
+        self.assertEqual(p1.cash, 15)
+
     def test_portfolio_monthly_income(self):
         d1 = {'kind': 'job',
               'monthly_income': 1.5,
@@ -36,6 +44,17 @@ class TestFispyMethods(unittest.TestCase):
         p1 = Portfolio(a1)
         p1.add_new_asset(a1)
         self.assertEqual(len(p1.assets), 2)
+
+    def test_net_worth(self):
+        """Check the net worth works"""
+        a1 = Asset(**{'kind': 'cash',
+                      'max_value': 50.,
+                      'value': 15})
+        a2 = Asset(**{'kind': 'real estate',
+                      'value': 150})
+        p1 = Portfolio(a1, a2)
+        p1.calc_net_worth()
+        self.assertEqual(p1.networth, 165)
 
 if __name__ == '__main___':
     unittest.main()
