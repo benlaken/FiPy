@@ -5,6 +5,10 @@ from dateutil.relativedelta import relativedelta
 
 
 class Asset(object):
+    """Asset items are essentially dictionaries, and should be of
+    a kind = 'real_estate', 'stocks', 'job', or 'cash'. There can be
+    infite assets in a Portfolio, but there should be only one cash
+    Asset, which should specify a maximum amount of cash to hold. """
     def __init__(self, **kwargs):
         self.kind = kwargs.get('kind')
         assert self.kind.lower() in [None, 'real estate', 'stocks',
@@ -88,6 +92,12 @@ class Portfolio(object):
         self.monthly_income = tmp_income
 
     def monthly_egres(self):
+        """Calculate and update the monthly outgoing money by summing
+        monthly_expenses from asset items.
+
+        :param self.assets.monthly_expenses: Sums list of asset.monthly_expense
+        :returns self.monthly_expenses: float
+        """
         tmp_expenses = 0
         for asset in self.assets:
             if asset.monthly_expenses:
@@ -97,6 +107,7 @@ class Portfolio(object):
         self.monthly_income -= tmp_expenses
 
     def investment_portfolio(self):
+        """Start of portflio methods."""
         tmp_net = 0
         for asset in self.assets:
             if asset.kind.lower() == 'stocks':
@@ -112,7 +123,12 @@ class Portfolio(object):
         self.net_investments = tmp_net
 
     def count_cash(self):
-        """nb. this function only expects to find one cash asset"""
+        """Examines assets for 'cash' type asset and does various actions.
+        nb. this function only expects to find one cash asset
+
+        :param self.asset.value: float
+        :results self.cash: float
+        """
         max_cash = 0
         for asset in self.assets:
             if asset.kind.lower() == 'cash':
@@ -124,23 +140,34 @@ class Portfolio(object):
                     self.cash = asset.value
 
     def monthly_repay(self):
+        """Examines a flag (asset.pay_debt_asap) from asset objects with debt.
+        If an asset has the flag set to True, it will take as much as possible
+        from the montly avaiable money (after expenses account for), and spend
+        it on minimizing the debt. The minimum repayments should be covered
+        for all assets before additional payments are considered.
+
+        :param self.asset: asset.debt, asset.monthly_repayment,
+        self.monthly_income used to see how to handle debt payments.
+        :returns self.asset.debt: float
+        """
         error1 = "Error: cant meet monthly repayment :("
         for asset in self.assets:
             if asset.debt and asset.monthly_repayment:
                 assert self.monthly_income > asset.monthly_repayment, error1
+                # Pay all minimum debts for the month
                 if (asset.debt - asset.monthly_repayment) <= 0.0:
-                    #if this is the last payment...
+                    # if this is the last payment, remove the debt
                     self.monthly_income -= asset.debt
                     asset.debt = None
                     asset.monthly_repayment = None
-                    return
                 else:
-                    if asset.pay_debt_asap:
-                        asset.debt -= self.monthly_income
-                        self.monthly_income = 0.0
-                    else:
-                        asset.debt -= asset.monthly_repayment
-                        self.monthly_income -= asset.monthly_repayment
+                    # otherwise, just take the minimum and dont worry
+                    asset.debt -= asset.monthly_repayment
+                    self.monthly_income -= asset.monthly_repayment
+        for asset in self.assets:
+            if asset.debt and asset.pay_debt_asap and self.monthly_icome > 0.0:
+                asset.debt -= self.monthly_income
+                self.monthly_income = 0.0
 
     def monthly_debt(self):
         """Calculate debt each month. Examines the Assets held in the Portfolio

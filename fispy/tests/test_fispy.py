@@ -6,7 +6,7 @@ from fispy.fispy import Asset, Portfolio
 class TestFispyMethods(unittest.TestCase):
     """Main class for fispy testing methods"""
 
-    def test_PortfolioMonthlyIncome(self):
+    def test_portfolio_monthly_income(self):
         d1 = {'kind': 'job',
               'monthly_income': 1.5,
               'start_date': dt.date(2016, 6, 1)}
@@ -17,7 +17,7 @@ class TestFispyMethods(unittest.TestCase):
         test2.monthly_ingres()
         self.assertEqual(test2.monthly_income, 3.0)
 
-    def test_PayExpenses(self):
+    def test_pay_expenses(self):
         d1 = {'kind': 'job',
               'monthly_income': 1.5,
               'start_date': dt.date(2016, 6, 1),
@@ -28,7 +28,7 @@ class TestFispyMethods(unittest.TestCase):
         self.assertEqual(test2.monthly_income,
                          d1['monthly_income']-d1['monthly_expenses'])
 
-    def test_AddAssets(self):
+    def test_add_assets(self):
         """ Check you can add assets to a created Portfolio """
         a1 = Asset(**{'kind': 'job',
                       'monthly_income': 1.5,
