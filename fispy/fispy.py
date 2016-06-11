@@ -164,7 +164,8 @@ class Portfolio(object):
                     asset.debt -= asset.monthly_repayment
                     self.monthly_income -= asset.monthly_repayment
         for asset in self.assets:
-            if asset.debt and asset.pay_debt_asap and self.monthly_icome > 0.0:
+            if asset.debt and asset.pay_debt_asap and
+            self.monthly_income > 0.0:
                 asset.debt -= self.monthly_income
                 self.monthly_income = 0.0
 
