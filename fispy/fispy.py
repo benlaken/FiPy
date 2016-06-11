@@ -30,6 +30,7 @@ class Asset(object):
         for key, value in sorted(a1.__dict__.items()):
             yield key, value
 
+
 class Portfolio(object):
     """ Operates on lists of assets. Can add assets individually
     with addNewAsset() function, or can initilize object with a
@@ -52,8 +53,7 @@ class Portfolio(object):
         self.debt = 0
         self.prd = 60
         self.cash = 0
-        self.networth = 0 # (cash + investments + property value) - debt
-
+        self.networth = 0
 
     def summary(self):
         """Print a summary of the Portfolio instance values of Income, Cash
@@ -111,13 +111,9 @@ class Portfolio(object):
         tmp_net = 0
         for asset in self.assets:
             if asset.kind.lower() == 'stocks':
-                # Work out value of assets
                 tmp_net += asset.value
-                # Increment assets (this should be replaced with historical monthly flux)
-                asset.value *= 1.00333  # placeholder way of incrementing value of an asset
-                # Buy more assets (at the moment this is naieve,
-                # and will spend all money on first stock it encounters in asset list)
-                if self.monthly_income > 0:  # If money left at end of month, invest it
+                asset.value *= 1.00333
+                if self.monthly_income > 0:
                     asset.value += self.monthly_income
                     self.monthly_income = 0
         self.net_investments = tmp_net
@@ -164,8 +160,7 @@ class Portfolio(object):
                     asset.debt -= asset.monthly_repayment
                     self.monthly_income -= asset.monthly_repayment
         for asset in self.assets:
-            if asset.debt and asset.pay_debt_asap and
-            self.monthly_income > 0.0:
+            if asset.debt and asset.pay_debt_asap and self.monthly_income > 0.0:
                 asset.debt -= self.monthly_income
                 self.monthly_income = 0.0
 
@@ -190,19 +185,18 @@ class Portfolio(object):
         """
         net_value = 0
         for asset in self.assets:
-            # cash, property and investments all have a value property (not jobs)
             if asset.value:
                 net_value += asset.value
         self.networth = net_value - self.debt
 
     def update_monthly(self):
         self.date = self.date + relativedelta(months=1)
-        self.monthly_ingres()   # Gather income at start of month
-        self.monthly_egres()  # Work out living expenses and subtract it from the income
-        self.monthly_repay()    # Repay monthly morgage expenses from income
-        self.monthly_debt()     # Work out remaining size of accumulated debt
-        self.count_cash()       # Count the cash and add to pile if required
-        self.investment_portfolio() # Gather investments value, and grow, also buy more if money left
+        self.monthly_ingres()
+        self.monthly_egres()
+        self.monthly_repay()
+        self.monthly_debt()
+        self.count_cash()
+        self.investment_portfolio()
         self.calc_net_worth()
 
     def quad_positions(self, left, right, bottom, top, color):
