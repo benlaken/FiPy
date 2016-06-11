@@ -74,7 +74,7 @@ class Portfolio(object):
         """
         self.assets.append(new_asset)
 
-    def monthly_income(self):
+    def monthly_ingres(self):
         """Calculate avaiable monthly cash based on monthly_income from all
         Asset() objects of a portfolio.
 
@@ -87,7 +87,7 @@ class Portfolio(object):
                 tmp_income += asset.monthly_income
         self.monthly_income = tmp_income
 
-    def monthly_expenses(self):
+    def monthly_egres(self):
         tmp_expenses = 0
         for asset in self.assets:
             if asset.monthly_expenses:
@@ -170,8 +170,8 @@ class Portfolio(object):
 
     def update_monthly(self):
         self.date = self.date + relativedelta(months=1)
-        self.monthly_income()   # Gather income at start of month
-        self.monthly_expenses()  # Work out living expenses and subtract it from the income
+        self.monthly_ingres()   # Gather income at start of month
+        self.monthly_egres()  # Work out living expenses and subtract it from the income
         self.monthly_repay()    # Repay monthly morgage expenses from income
         self.monthly_debt()     # Work out remaining size of accumulated debt
         self.count_cash()       # Count the cash and add to pile if required
