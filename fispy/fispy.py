@@ -146,8 +146,7 @@ class Portfolio(object):
         it on minimizing the debt. The minimum repayments should be covered
         for all assets before additional payments are considered.
 
-        :param self.asset: asset.debt, asset.monthly_repayment,
-        self.monthly_income used to see how to handle debt payments.
+        :param self.asset:
         :returns self.asset.debt: float
         """
         error1 = "Error: cant meet monthly repayment :("
