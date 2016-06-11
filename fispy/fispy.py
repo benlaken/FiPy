@@ -44,7 +44,7 @@ class Portfolio(object):
             self.date = min([asset.start_date for asset in self.assets])
         self.monthly_income = 0
         self.monthly_expenses = 0
-        self.netInvestments = 0
+        self.net_investments = 0
         self.debt = 0
         self.prd = 60
         self.cash = 0
@@ -61,10 +61,10 @@ class Portfolio(object):
         print("--Summary--\nIncome: {0:3.2f} \nCash: {1:3.2f}".format(
                 self.monthly_income, self.cash))
         print("Debt: {0:3.2f}".format(self.debt))
-        print("Investments: {0:3.2f}".format(self.netInvestments))
+        print("Investments: {0:3.2f}".format(self.net_investments))
         print("Net worth: {0:3.2f}".format(self.networth))
 
-    def addNewAsset(self, new_asset):
+    def add_new_asset(self, new_asset):
         """Add a new Asset() obect to an existing Portfolio instance.
         This will be useful for modifying established portfolios once this is
         running as a web app.
@@ -74,7 +74,7 @@ class Portfolio(object):
         """
         self.assets.append(new_asset)
 
-    def monthlyIncome(self):
+    def monthly_income(self):
         """Calculate avaiable monthly cash based on monthly_income from all
         Asset() objects of a portfolio.
 
@@ -87,16 +87,16 @@ class Portfolio(object):
                 tmp_income += asset.monthly_income
         self.monthly_income = tmp_income
 
-    def monthlyExpenses(self):
+    def monthly_expenses(self):
         tmp_expenses = 0
         for asset in self.assets:
             if asset.monthly_expenses:
                 tmp_expenses += asset.monthly_expenses
         self.monthly_expenses = tmp_expenses
-        assert tmp_expenses < self.monthly_income, "Error: spending too much money..."
+        assert tmp_expenses < self.monthly_income, "Error: spending too much"
         self.monthly_income -= tmp_expenses
 
-    def investmentPortfolio(self):
+    def investment_portfolio(self):
         tmp_net = 0
         for asset in self.assets:
             if asset.kind.lower() == 'stocks':
@@ -109,9 +109,9 @@ class Portfolio(object):
                 if self.monthly_income > 0:  # If money left at end of month, invest it
                     asset.value += self.monthly_income
                     self.monthly_income = 0
-        self.netInvestments = tmp_net
+        self.net_investments = tmp_net
 
-    def countCash(self):
+    def count_cash(self):
         """nb. this function only expects to find one cash asset"""
         max_cash = 0
         for asset in self.assets:
@@ -123,10 +123,11 @@ class Portfolio(object):
                     self.monthly_income = 0.0
                     self.cash = asset.value
 
-    def monthlyRepay(self):
+    def monthly_repay(self):
+        error1 = "Error: cant meet monthly repayment :("
         for asset in self.assets:
             if asset.debt and asset.monthly_repayment:
-                assert self.monthly_income > asset.monthly_repayment, "Error: cant meet monthly repayment :("
+                assert self.monthly_income > asset.monthly_repayment, error1
                 if (asset.debt - asset.monthly_repayment) <= 0.0:
                     #if this is the last payment...
                     self.monthly_income -= asset.debt
@@ -141,7 +142,7 @@ class Portfolio(object):
                         asset.debt -= asset.monthly_repayment
                         self.monthly_income -= asset.monthly_repayment
 
-    def monthlyDebt(self):
+    def monthly_debt(self):
         """Calculate debt each month. Examines the Assets held in the Portfolio
         object, and sums the debt. Assigns this value to self.debt.
 
@@ -154,7 +155,7 @@ class Portfolio(object):
                 tmp_debt += asset.debt
         self.debt = tmp_debt
 
-    def calcNetWorth(self):
+    def calc_net_worth(self):
         """Calculates Net worth by summing value of assets and subtracting debt.
 
         :param self: Examines attributes of Portfolio object
@@ -169,13 +170,13 @@ class Portfolio(object):
 
     def update_monthly(self):
         self.date = self.date + relativedelta(months=1)
-        self.monthlyIncome()   # Gather income at start of month
-        self.monthlyExpenses()  # Work out living expenses and subtract it from the income
-        self.monthlyRepay()    # Repay monthly morgage expenses from income
-        self.monthlyDebt()     # Work out remaining size of accumulated debt
-        self.countCash()       # Count the cash and add to pile if required
-        self.investmentPortfolio() # Gather investments value, and grow, also buy more if money left
-        self.calcNetWorth()
+        self.monthly_income()   # Gather income at start of month
+        self.monthly_expenses()  # Work out living expenses and subtract it from the income
+        self.monthly_repay()    # Repay monthly morgage expenses from income
+        self.monthly_debt()     # Work out remaining size of accumulated debt
+        self.count_cash()       # Count the cash and add to pile if required
+        self.investment_portfolio() # Gather investments value, and grow, also buy more if money left
+        self.calc_net_worth()
 
     def quad_positions(self, left, right, bottom, top, color):
         """Assign values to the left, right, bottom, and top position
@@ -200,12 +201,12 @@ class Portfolio(object):
         left.append(self.date)
         right.append(self.date + relativedelta(months=1))
         bottom.append(self.cash)
-        top.append(self.cash + self.netInvestments)
+        top.append(self.cash + self.net_investments)
         color.append('#BF00FF')
         # Add net worth marker (including  primary property)
         left.append(self.date)
         right.append(self.date + relativedelta(months=1))
-        bottom.append(self.cash + self.netInvestments)
+        bottom.append(self.cash + self.net_investments)
         top.append(self.networth)
         color.append('#BDBDBD')
         return
