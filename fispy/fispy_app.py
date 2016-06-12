@@ -39,7 +39,7 @@ projection = Portfolio(Asset(**d1),
                        Asset(**d2),
                        Asset(**d3),
                        Asset(**d4),
-                       Asset(**d5))
+                       Asset(**d5), prd=200)
 source = ColumnDataSource(projection.gen_quads())
 
 TOOLS = "crosshair, pan, reset, resize, wheel_zoom"
@@ -58,9 +58,9 @@ def update_graphic():
                            Asset(**d2),
                            Asset(**d3),
                            Asset(**d4),
-                           Asset(**d5))
+                           Asset(**d5), prd=200)
     bdf_quad = projection.gen_quads()
-    #print(bdf_quad.head())
+    # print(bdf_quad.head())
     source.data['bottom'] = bdf_quad['bottom']
     source.data['top'] = bdf_quad['top']
     source.data['left'] = bdf_quad['left']

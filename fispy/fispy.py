@@ -37,10 +37,11 @@ class Portfolio(object):
     list of asset objects.
 
     :param Asset: n number of Asset objects
+    :param prd: integer indicating number of months to run
     :returns: A Portfolio instance
     """
 
-    def __init__(self, *assets):
+    def __init__(self, *assets, prd=60):
         self.assets = []
         print("{0} items passed".format(len(assets)))
         if assets:
@@ -51,9 +52,54 @@ class Portfolio(object):
         self.monthly_expenses = 0
         self.net_investments = 0
         self.debt = 0
-        self.prd = 60
+        self.prd = prd
         self.cash = 0
+        self._temporary_capitol = None
         self.networth = 0
+        self.fi = False
+        self.buy_property_threshold = 80
+        self.passive_income = 0
+
+    def buy_property(self, asset):
+        """Subtract value of asset from investments"""
+        print('placeholder function Portfolio.buy_property()')
+        self.sell_shares(amount=asset.value - asset.debt)
+        self.add_new_asset(new_asset=asset)
+
+    def sell_shares(self, amount):
+        """Need a method to handel liquidating a share portfolio"""
+        # gather up all stock assets
+        # rmv required value from stocks and place in self._temporary_capitol
+        print("placeholder function in Portfolio.sell_shares()")
+        self._temporary_capitol = amount
+        for asset in self.assets:
+            if asset.kind.lower() == 'stocks':
+                if asset.value > amount:
+                    asset.value -= amount
+                    self._temporary_capitol = amount
+                else:
+                    # if one asset cant meet all requirements look for more
+                    amount -= asset.value
+                    asset.value = 0
+
+    def check_fi(self):
+        """Check if FI has been reached. Point at which monthly incoming
+        is greater than monthly outgoings before counting wages from jobs.
+        """
+        negative = 0
+        positive = 0
+        for asset in self.assets:
+            if asset.monthly_expenses:
+                negative += asset.monthly_expenses
+            if asset.monthly_repayment:
+                negative += asset.monthly_repayment
+            if asset.kind != 'job' and asset.monthly_income:
+                positive += asset.monthly_income
+        self.passive_income = positive
+        if positive > negative:
+            self.fi = True
+        else:
+            self.fi = False
 
     def summary(self):
         """Print a summary of the Portfolio instance values of Income, Cash
@@ -67,6 +113,7 @@ class Portfolio(object):
         print("Debt: {0:3.2f}".format(self.debt))
         print("Investments: {0:3.2f}".format(self.net_investments))
         print("Net worth: {0:3.2f}".format(self.networth))
+        print("Passive income: {0:3.2f}".format(self.passive_income))
 
     def add_new_asset(self, new_asset):
         """Add a new Asset() obect to an existing Portfolio instance.
@@ -160,7 +207,7 @@ class Portfolio(object):
                     asset.debt -= asset.monthly_repayment
                     self.monthly_income -= asset.monthly_repayment
         for asset in self.assets:
-            if asset.debt and asset.pay_debt_asap and self.monthly_income > 0.0:
+            if asset.debt and asset.pay_debt_asap and self.monthly_income > 0:
                 asset.debt -= self.monthly_income
                 self.monthly_income = 0.0
 
@@ -191,6 +238,16 @@ class Portfolio(object):
 
     def update_monthly(self):
         self.date = self.date + relativedelta(months=1)
+        if self.net_investments > self.buy_property_threshold:
+            print('triggered buy property')
+            # temp hack - keep buying same kind of place
+            self.buy_property(asset=Asset(**{'kind': 'real estate',
+                                             'debt': 70,
+                                             'value': 150,
+                                             'monthly_repayment': 0.5,
+                                             'monthly_income': 0.8,
+                                             'start_date': self.date,
+                                             'pay_debt_asap': True}))
         self.monthly_ingres()
         self.monthly_egres()
         self.monthly_repay()
@@ -198,10 +255,12 @@ class Portfolio(object):
         self.count_cash()
         self.investment_portfolio()
         self.calc_net_worth()
+        self.check_fi()
 
     def quad_positions(self, left, right, bottom, top, color):
         """Assign values to the left, right, bottom, and top position
-        labels and a color value for the Bokeh Quad glyph.
+        labels and a color value for the Bokeh Quad glyph. Uses two
+        diffrent colors depending on if FI has been reached.
 
         :param self, left, right, bottom, top, color:
         :returns: Assigns values to the list items.
@@ -211,25 +270,37 @@ class Portfolio(object):
         right.append(self.date + relativedelta(months=1))
         top.append(0.0)
         bottom.append(self.debt * -1)
-        color.append('#FE642E')
+        if self.fi:
+            color.append('#e65c00')
+        else:
+            color.append('#ff944d')
         # Add cash marker
         left.append(self.date)
         right.append(self.date + relativedelta(months=1))
         bottom.append(0.0)
         top.append(self.cash)
-        color.append('green')
+        if self.fi:
+            color.append('#008000')
+        else:
+            color.append('#00e600')
         # Add stock marker
         left.append(self.date)
         right.append(self.date + relativedelta(months=1))
         bottom.append(self.cash)
         top.append(self.cash + self.net_investments)
-        color.append('#BF00FF')
+        if self.fi:
+            color.append('#800080')
+        else:
+            color.append('#e600e6')
         # Add net worth marker (including  primary property)
         left.append(self.date)
         right.append(self.date + relativedelta(months=1))
         bottom.append(self.cash + self.net_investments)
         top.append(self.networth)
-        color.append('#BDBDBD')
+        if self.fi:
+            color.append('#75a3a3')
+        else:
+            color.append('#b3cccc')
         return
 
     def gen_quads(self):
