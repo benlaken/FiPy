@@ -8,7 +8,8 @@ from bokeh.charts.attributes import cat, color
 from bokeh.plotting import Figure, curdoc, vplot
 from bokeh.models import ColumnDataSource
 from bokeh.io import vform
-from fispy import Asset, Portfolio
+from fispy.fispy import Asset, Portfolio
+
 
 # Initilise with list of assets...
 d1 = {'kind': 'job',
