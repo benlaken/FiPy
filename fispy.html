@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fispy package &#8212; fispy 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="fispy 0.1 documentation" href="index.html" />
+    <link rel="up" title="fispy" href="modules.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fispy-package">
+<h1>fispy package<a class="headerlink" href="#fispy-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-fispy.fispy">
+<span id="fispy-fispy-module"></span><h2>fispy.fispy module<a class="headerlink" href="#module-fispy.fispy" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="fispy.fispy.Asset">
+<em class="property">class </em><code class="descclassname">fispy.fispy.</code><code class="descname">Asset</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Asset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Asset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Asset items are essentially dictionaries, and should be of
+a kind = &#8216;real_estate&#8217;, &#8216;stocks&#8217;, &#8216;job&#8217;, or &#8216;cash&#8217;. There can be
+infite assets in a Portfolio, but there should be only one cash
+Asset, which should specify a maximum amount of cash to hold.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="fispy.fispy.Portfolio">
+<em class="property">class </em><code class="descclassname">fispy.fispy.</code><code class="descname">Portfolio</code><span class="sig-paren">(</span><em>*assets</em>, <em>*</em>, <em>prd=60</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Operates on lists of assets. Can add assets individually
+with addNewAsset() function, or can initilize object with a
+list of asset objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Asset</strong> &#8211; n number of Asset objects</li>
+<li><strong>prd</strong> &#8211; integer indicating number of months to run</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A Portfolio instance</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.add_new_asset">
+<code class="descname">add_new_asset</code><span class="sig-paren">(</span><em>new_asset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.add_new_asset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.add_new_asset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new Asset() obect to an existing Portfolio instance.
+This will be useful for modifying established portfolios once this is
+running as a web app.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>Asset()</strong> &#8211; Instance of Asset() object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Updates Portfolio object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.buy_property">
+<code class="descname">buy_property</code><span class="sig-paren">(</span><em>asset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.buy_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.buy_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtract value of asset from investments</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.calc_net_worth">
+<code class="descname">calc_net_worth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.calc_net_worth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.calc_net_worth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates Net worth by summing value of assets and subtracting debt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> &#8211; Examines attributes of Portfolio object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">self.networth in Portfolio object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.check_fi">
+<code class="descname">check_fi</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.check_fi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.check_fi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if FI has been reached. Point at which monthly incoming
+is greater than monthly outgoings before counting wages from jobs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.count_cash">
+<code class="descname">count_cash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.count_cash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.count_cash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Examines assets for &#8216;cash&#8217; type asset and does various actions.
+nb. this function only expects to find one cash asset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self.asset.value</strong> &#8211; float</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Results self.cash:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.gen_quads">
+<code class="descname">gen_quads</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.gen_quads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.gen_quads" title="Permalink to this definition">¶</a></dt>
+<dd><p>For the current state of Portfolio properties generate quad plot
+dataframe object to be consumed by Bokeh plots.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> &#8211; Examines attributes of Portfolio object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a pd.DataFrame object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.investment_portfolio">
+<code class="descname">investment_portfolio</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.investment_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.investment_portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start of portflio methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.monthly_debt">
+<code class="descname">monthly_debt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.monthly_debt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.monthly_debt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate debt each month. Examines the Assets held in the Portfolio
+object, and sums the debt. Assigns this value to self.debt.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> &#8211; Examines Portfolio objects assets.debt floats</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns self.debt:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.monthly_egres">
+<code class="descname">monthly_egres</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.monthly_egres"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.monthly_egres" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate and update the monthly outgoing money by summing
+monthly_expenses from asset items.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self.assets.monthly_expenses</strong> &#8211; Sums list of asset.monthly_expense</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns self.monthly_expenses:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.monthly_ingres">
+<code class="descname">monthly_ingres</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.monthly_ingres"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.monthly_ingres" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate avaiable monthly cash based on monthly_income from all
+Asset() objects of a portfolio.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self.assets</strong> &#8211; Sums asset.monthly_income across asset objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns self.monthly_income:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.monthly_repay">
+<code class="descname">monthly_repay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.monthly_repay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.monthly_repay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Examines a flag (asset.pay_debt_asap) from asset objects with debt.
+If an asset has the flag set to True, it will take as much as possible
+from the montly avaiable money (after expenses account for), and spend
+it on minimizing the debt. The minimum repayments should be covered
+for all assets before additional payments are considered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self.asset</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns self.asset.debt:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.quad_positions">
+<code class="descname">quad_positions</code><span class="sig-paren">(</span><em>left</em>, <em>right</em>, <em>bottom</em>, <em>top</em>, <em>color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.quad_positions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.quad_positions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign values to the left, right, bottom, and top position
+labels and a color value for the Bokeh Quad glyph. Uses two
+diffrent colors depending on if FI has been reached.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>left, right, bottom, top, color</strong> (<em>self,</em>) &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Assigns values to the list items.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.sell_shares">
+<code class="descname">sell_shares</code><span class="sig-paren">(</span><em>amount</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.sell_shares"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.sell_shares" title="Permalink to this definition">¶</a></dt>
+<dd><p>Need a method to handel liquidating a share portfolio</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a summary of the Portfolio instance values of Income, Cash
+Debt, Investments and Net worth.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A series of string items</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="fispy.fispy.Portfolio.update_monthly">
+<code class="descname">update_monthly</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fispy/fispy.html#Portfolio.update_monthly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fispy.fispy.Portfolio.update_monthly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-fispy">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fispy" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fispy package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-fispy.fispy">fispy.fispy module</a></li>
+<li><a class="reference internal" href="#module-fispy">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">fispy</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fispy.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Benjamin A. Laken.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/fispy.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

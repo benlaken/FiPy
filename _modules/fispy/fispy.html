@@ -1,0 +1,410 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fispy.fispy &#8212; fispy 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="fispy 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for fispy.fispy</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+<span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="k">import</span> <span class="n">relativedelta</span>
+
+
+<div class="viewcode-block" id="Asset"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Asset">[docs]</a><span class="k">class</span> <span class="nc">Asset</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Asset items are essentially dictionaries, and should be of</span>
+<span class="sd">    a kind = &#39;real_estate&#39;, &#39;stocks&#39;, &#39;job&#39;, or &#39;cash&#39;. There can be</span>
+<span class="sd">    infite assets in a Portfolio, but there should be only one cash</span>
+<span class="sd">    Asset, which should specify a maximum amount of cash to hold. &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;kind&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;real estate&#39;</span><span class="p">,</span> <span class="s1">&#39;stocks&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;job&#39;</span><span class="p">,</span> <span class="s1">&#39;cash&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monthly_income&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_expenses</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monthly_expenses&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;end_date&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;debt&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cash</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_cash&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_repayment</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;monthly_repayment&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pay_debt_asap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pay_debt_asap&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;Asset = </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="Portfolio"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio">[docs]</a><span class="k">class</span> <span class="nc">Portfolio</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Operates on lists of assets. Can add assets individually</span>
+<span class="sd">    with addNewAsset() function, or can initilize object with a</span>
+<span class="sd">    list of asset objects.</span>
+
+<span class="sd">    :param Asset: n number of Asset objects</span>
+<span class="sd">    :param prd: integer indicating number of months to run</span>
+<span class="sd">    :returns: A Portfolio instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">assets</span><span class="p">,</span> <span class="n">prd</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> items passed&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">assets</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">assets</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">assets</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">asset</span><span class="o">.</span><span class="n">start_date</span> <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_expenses</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net_investments</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prd</span> <span class="o">=</span> <span class="n">prd</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cash</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_capitol</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">networth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fi</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buy_property_threshold</span> <span class="o">=</span> <span class="mi">80</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">passive_income</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="Portfolio.buy_property"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.buy_property">[docs]</a>    <span class="k">def</span> <span class="nf">buy_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Subtract value of asset from investments&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;placeholder function Portfolio.buy_property()&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sell_shares</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">asset</span><span class="o">.</span><span class="n">debt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_new_asset</span><span class="p">(</span><span class="n">new_asset</span><span class="o">=</span><span class="n">asset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.sell_shares"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.sell_shares">[docs]</a>    <span class="k">def</span> <span class="nf">sell_shares</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Need a method to handel liquidating a share portfolio&quot;&quot;&quot;</span>
+        <span class="c1"># gather up all stock assets</span>
+        <span class="c1"># rmv required value from stocks and place in self._temporary_capitol</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;placeholder function in Portfolio.sell_shares()&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_capitol</span> <span class="o">=</span> <span class="n">amount</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;stocks&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">amount</span><span class="p">:</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">-=</span> <span class="n">amount</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_temporary_capitol</span> <span class="o">=</span> <span class="n">amount</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># if one asset cant meet all requirements look for more</span>
+                    <span class="n">amount</span> <span class="o">-=</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Portfolio.check_fi"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.check_fi">[docs]</a>    <span class="k">def</span> <span class="nf">check_fi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if FI has been reached. Point at which monthly incoming</span>
+<span class="sd">        is greater than monthly outgoings before counting wages from jobs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">negative</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">positive</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_expenses</span><span class="p">:</span>
+                <span class="n">negative</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_expenses</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span><span class="p">:</span>
+                <span class="n">negative</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">kind</span> <span class="o">!=</span> <span class="s1">&#39;job&#39;</span> <span class="ow">and</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_income</span><span class="p">:</span>
+                <span class="n">positive</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_income</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">passive_income</span> <span class="o">=</span> <span class="n">positive</span>
+        <span class="k">if</span> <span class="n">positive</span> <span class="o">&gt;</span> <span class="n">negative</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fi</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fi</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Portfolio.summary"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print a summary of the Portfolio instance values of Income, Cash</span>
+<span class="sd">        Debt, Investments and Net worth.</span>
+
+<span class="sd">        :param self:</span>
+<span class="sd">        :returns: A series of string items</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--Summary--</span><span class="se">\n</span><span class="s2">Income: </span><span class="si">{0:3.2f}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">Cash: </span><span class="si">{1:3.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cash</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Debt: </span><span class="si">{0:3.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debt</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Investments: </span><span class="si">{0:3.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">net_investments</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Net worth: </span><span class="si">{0:3.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">networth</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Passive income: </span><span class="si">{0:3.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">passive_income</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Portfolio.add_new_asset"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.add_new_asset">[docs]</a>    <span class="k">def</span> <span class="nf">add_new_asset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_asset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a new Asset() obect to an existing Portfolio instance.</span>
+<span class="sd">        This will be useful for modifying established portfolios once this is</span>
+<span class="sd">        running as a web app.</span>
+
+<span class="sd">        :param Asset(): Instance of Asset() object</span>
+<span class="sd">        :returns: Updates Portfolio object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_asset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Portfolio.monthly_ingres"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.monthly_ingres">[docs]</a>    <span class="k">def</span> <span class="nf">monthly_ingres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate avaiable monthly cash based on monthly_income from all</span>
+<span class="sd">        Asset() objects of a portfolio.</span>
+
+<span class="sd">        :param self.assets: Sums asset.monthly_income across asset objects</span>
+<span class="sd">        :returns self.monthly_income: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmp_income</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_income</span><span class="p">:</span>
+                <span class="n">tmp_income</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_income</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">=</span> <span class="n">tmp_income</span></div>
+
+<div class="viewcode-block" id="Portfolio.monthly_egres"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.monthly_egres">[docs]</a>    <span class="k">def</span> <span class="nf">monthly_egres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate and update the monthly outgoing money by summing</span>
+<span class="sd">        monthly_expenses from asset items.</span>
+
+<span class="sd">        :param self.assets.monthly_expenses: Sums list of asset.monthly_expense</span>
+<span class="sd">        :returns self.monthly_expenses: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmp_expenses</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_expenses</span><span class="p">:</span>
+                <span class="n">tmp_expenses</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_expenses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_expenses</span> <span class="o">=</span> <span class="n">tmp_expenses</span>
+        <span class="k">assert</span> <span class="n">tmp_expenses</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span><span class="p">,</span> <span class="s2">&quot;Error: spending too much&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">-=</span> <span class="n">tmp_expenses</span></div>
+
+<div class="viewcode-block" id="Portfolio.investment_portfolio"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.investment_portfolio">[docs]</a>    <span class="k">def</span> <span class="nf">investment_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start of portflio methods.&quot;&quot;&quot;</span>
+        <span class="n">tmp_net</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;stocks&#39;</span><span class="p">:</span>
+                <span class="n">tmp_net</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">*=</span> <span class="mf">1.00333</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net_investments</span> <span class="o">=</span> <span class="n">tmp_net</span></div>
+
+<div class="viewcode-block" id="Portfolio.count_cash"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.count_cash">[docs]</a>    <span class="k">def</span> <span class="nf">count_cash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Examines assets for &#39;cash&#39; type asset and does various actions.</span>
+<span class="sd">        nb. this function only expects to find one cash asset</span>
+
+<span class="sd">        :param self.asset.value: float</span>
+<span class="sd">        :results self.cash: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_cash</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;cash&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cash</span> <span class="o">=</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span>
+                <span class="n">max_cash</span> <span class="o">=</span> <span class="n">asset</span><span class="o">.</span><span class="n">max_cash</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cash</span> <span class="o">&lt;</span> <span class="n">max_cash</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">value</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cash</span> <span class="o">=</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span></div>
+
+<div class="viewcode-block" id="Portfolio.monthly_repay"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.monthly_repay">[docs]</a>    <span class="k">def</span> <span class="nf">monthly_repay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Examines a flag (asset.pay_debt_asap) from asset objects with debt.</span>
+<span class="sd">        If an asset has the flag set to True, it will take as much as possible</span>
+<span class="sd">        from the montly avaiable money (after expenses account for), and spend</span>
+<span class="sd">        it on minimizing the debt. The minimum repayments should be covered</span>
+<span class="sd">        for all assets before additional payments are considered.</span>
+
+<span class="sd">        :param self.asset:</span>
+<span class="sd">        :returns self.asset.debt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">error1</span> <span class="o">=</span> <span class="s2">&quot;Error: cant meet monthly repayment :(&quot;</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">debt</span> <span class="ow">and</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">&gt;</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span><span class="p">,</span> <span class="n">error1</span>
+                <span class="c1"># Pay all minimum debts for the month</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">asset</span><span class="o">.</span><span class="n">debt</span> <span class="o">-</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="c1"># if this is the last payment, remove the debt</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">-=</span> <span class="n">asset</span><span class="o">.</span><span class="n">debt</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">debt</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># otherwise, just take the minimum and dont worry</span>
+                    <span class="n">asset</span><span class="o">.</span><span class="n">debt</span> <span class="o">-=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">-=</span> <span class="n">asset</span><span class="o">.</span><span class="n">monthly_repayment</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">debt</span> <span class="ow">and</span> <span class="n">asset</span><span class="o">.</span><span class="n">pay_debt_asap</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">asset</span><span class="o">.</span><span class="n">debt</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">monthly_income</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+<div class="viewcode-block" id="Portfolio.monthly_debt"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.monthly_debt">[docs]</a>    <span class="k">def</span> <span class="nf">monthly_debt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate debt each month. Examines the Assets held in the Portfolio</span>
+<span class="sd">        object, and sums the debt. Assigns this value to self.debt.</span>
+
+<span class="sd">        :param self: Examines Portfolio objects assets.debt floats</span>
+<span class="sd">        :returns self.debt: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tmp_debt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">debt</span><span class="p">:</span>
+                <span class="n">tmp_debt</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">debt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debt</span> <span class="o">=</span> <span class="n">tmp_debt</span></div>
+
+<div class="viewcode-block" id="Portfolio.calc_net_worth"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.calc_net_worth">[docs]</a>    <span class="k">def</span> <span class="nf">calc_net_worth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates Net worth by summing value of assets and subtracting debt.</span>
+
+<span class="sd">        :param self: Examines attributes of Portfolio object</span>
+<span class="sd">        :returns: self.networth in Portfolio object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">net_value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">assets</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="n">net_value</span> <span class="o">+=</span> <span class="n">asset</span><span class="o">.</span><span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">networth</span> <span class="o">=</span> <span class="n">net_value</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">debt</span></div>
+
+<div class="viewcode-block" id="Portfolio.update_monthly"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.update_monthly">[docs]</a>    <span class="k">def</span> <span class="nf">update_monthly</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_investments</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">buy_property_threshold</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;triggered buy property&#39;</span><span class="p">)</span>
+            <span class="c1"># temp hack - keep buying same kind of place</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buy_property</span><span class="p">(</span><span class="n">asset</span><span class="o">=</span><span class="n">Asset</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;real estate&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;debt&#39;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+                                             <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+                                             <span class="s1">&#39;monthly_repayment&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+                                             <span class="s1">&#39;monthly_income&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+                                             <span class="s1">&#39;start_date&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">,</span>
+                                             <span class="s1">&#39;pay_debt_asap&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_ingres</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_egres</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_repay</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monthly_debt</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count_cash</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">investment_portfolio</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_net_worth</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_fi</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Portfolio.quad_positions"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.quad_positions">[docs]</a>    <span class="k">def</span> <span class="nf">quad_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign values to the left, right, bottom, and top position</span>
+<span class="sd">        labels and a color value for the Bokeh Quad glyph. Uses two</span>
+<span class="sd">        diffrent colors depending on if FI has been reached.</span>
+
+<span class="sd">        :param self, left, right, bottom, top, color:</span>
+<span class="sd">        :returns: Assigns values to the list items.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add debt marker</span>
+        <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">bottom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">debt</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#e65c00&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#ff944d&#39;</span><span class="p">)</span>
+        <span class="c1"># Add cash marker</span>
+        <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">bottom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#008000&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#00e600&#39;</span><span class="p">)</span>
+        <span class="c1"># Add stock marker</span>
+        <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">bottom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cash</span><span class="p">)</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cash</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_investments</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#800080&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#e600e6&#39;</span><span class="p">)</span>
+        <span class="c1"># Add net worth marker (including  primary property)</span>
+        <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+        <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">+</span> <span class="n">relativedelta</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">bottom</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cash</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">net_investments</span><span class="p">)</span>
+        <span class="n">top</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">networth</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fi</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#75a3a3&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;#b3cccc&#39;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="Portfolio.gen_quads"><a class="viewcode-back" href="../../fispy.html#fispy.fispy.Portfolio.gen_quads">[docs]</a>    <span class="k">def</span> <span class="nf">gen_quads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For the current state of Portfolio properties generate quad plot</span>
+<span class="sd">        dataframe object to be consumed by Bokeh plots.</span>
+
+<span class="sd">        :param self: Examines attributes of Portfolio object</span>
+<span class="sd">        :returns: a pd.DataFrame object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prd</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_monthly</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quad_positions</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">left</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="n">bottom</span><span class="p">,</span>
+                                <span class="n">right</span><span class="o">=</span><span class="n">right</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">left</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">right</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span> <span class="n">top</span><span class="p">,</span>
+                            <span class="s1">&#39;bottom&#39;</span><span class="p">:</span> <span class="n">bottom</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">color</span><span class="p">})</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Benjamin A. Laken.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
