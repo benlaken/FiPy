@@ -12,14 +12,6 @@ fispy.fispy module
     :undoc-members:
     :show-inheritance:
 
-fispy.fispy_app module
-----------------------
-
-.. automodule:: fispy.fispy_app
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------
